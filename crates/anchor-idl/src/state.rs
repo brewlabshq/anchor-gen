@@ -61,8 +61,16 @@ pub fn generate_account(
         #derive_copy
         #derive_default
         pub struct #struct_name {
+           _discriminator: [u8; 8],
             #fields_rendered
         }
+
+        impl #struct_name {
+                   pub fn deserialize_unchecked(data: &[u8]) -> std::io::Result<Self> {
+                       let mut data_mut = data;
+                       #struct_name::deserialize(&mut data_mut)
+                   }
+               }
     }
 }
 
